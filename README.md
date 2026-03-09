@@ -1,4 +1,3 @@
-README.md Template for Your Project
 # Multi-User Webhook Delivery System
 
 A reliable webhook delivery platform where users can register HTTP endpoints, subscribe to events, and receive real-time payloads when those events occur.
@@ -9,21 +8,23 @@ This project was built as part of the **Atomicwork DevOps Intern Assignment**.
 
 # Architecture Overview
 
-The system consists of the following components:
+The system architecture:
+
 
 Client / Event Publisher
-        |
-        v
-   FastAPI Backend
-        |
-        v
-      Redis Queue
-        |
-        v
- Delivery Worker
-        |
-        v
- Webhook Endpoint (Mock Receiver)
+|
+v
+FastAPI Backend
+|
+v
+Redis Queue
+|
+v
+Delivery Worker
+|
+v
+Webhook Endpoint (Mock Receiver)
+
 
 ### Components
 
@@ -34,13 +35,13 @@ Handles webhook management and event ingestion.
 Stores delivery jobs for asynchronous processing.
 
 **Worker Service**  
-Continuously processes queued jobs and delivers webhooks.
+Processes queued jobs and delivers webhooks.
 
 **Mock Receiver**  
 Simulates an external webhook endpoint for testing.
 
 **Docker Compose**  
-Runs all services together with a single command.
+Runs the entire system with one command.
 
 ---
 
@@ -59,8 +60,6 @@ Runs all services together with a single command.
 
 ## Webhook Management API
 
-Users can manage webhooks through the following endpoints.
-
 ### Register Webhook
 
 
@@ -69,9 +68,9 @@ POST /webhooks
 
 Registers a webhook endpoint with selected event subscriptions.
 
-Example:
+Example request:
 
-```json
+json
 {
   "url": "http://mock-receiver:9000/webhook",
   "event_types": ["request.created", "request.updated"]
@@ -100,7 +99,7 @@ Events are ingested through:
 
 POST /events
 
-Example:
+Example request:
 
 {
   "user_id": "user1",
@@ -110,7 +109,7 @@ Example:
   }
 }
 
-The system finds all active webhooks subscribed to the event and creates delivery jobs.
+The system finds all active webhooks subscribed to the event and queues delivery jobs.
 
 Webhook Delivery
 
@@ -120,19 +119,19 @@ A delivery is considered successful when the receiver responds with a 2xx HTTP s
 
 Failed deliveries are logged.
 
-Retry logic is intentionally omitted as per assignment requirements.
+Retry logic is intentionally omitted as specified in the assignment.
 
 Rate Limiting Strategy (Part B)
 
 Webhook deliveries are rate-limited using a global delivery rate.
 
-Implementation approach:
+Implementation:
 
-A configurable limit defines maximum deliveries per second.
+A configurable limit defines deliveries per second
 
-The worker enforces the rate using Redis-based counters.
+The worker enforces this limit using Redis
 
-If the rate is exceeded, jobs remain queued until capacity becomes available.
+Excess deliveries remain queued until capacity becomes available
 
 This ensures no deliveries are dropped.
 
@@ -140,18 +139,16 @@ Multi-User Fairness Strategy (Part C)
 
 To prevent one user from blocking others:
 
-Each user's jobs are logically separated.
+Jobs are separated into per-user queues
 
-Worker processes jobs in a round-robin scheduling approach.
+Worker processes queues using round-robin scheduling
 
-This ensures users with smaller workloads are not delayed by heavy users.
-
-Example scenario:
+Example:
 
 User A publishes 1000 events
 User B publishes 1 event
 
-User B's webhook delivery is processed quickly instead of waiting behind User A's entire queue.
+User B’s delivery is processed quickly instead of waiting behind User A’s backlog.
 
 Running the System
 
@@ -160,7 +157,7 @@ Clone the repository:
 git clone https://github.com/MahendraGubagundam/webhook-system.git
 cd webhook-system
 
-Start the system:
+Start all services:
 
 docker compose up --build
 
@@ -168,7 +165,7 @@ This will start:
 
 API service
 
-Redis queue
+Redis
 
 PostgreSQL
 
@@ -178,15 +175,19 @@ Mock receiver
 
 Testing the System
 
-Open FastAPI docs:
+Open FastAPI documentation:
 
 http://localhost:8000/docs
 
-Register a webhook.
+Steps:
 
-Publish an event.
+Register a webhook
 
-The worker will deliver the event to the mock receiver.
+Publish an event
+
+Worker processes queue
+
+Mock receiver receives webhook
 
 Check received events:
 
@@ -222,7 +223,7 @@ webhook-system
 └── README.md
 Commit History
 
-The repository contains meaningful commits representing incremental development:
+The repository includes meaningful commits representing incremental development:
 
 Project setup
 
@@ -236,4 +237,4 @@ Docker infrastructure
 
 Author
 
-Mahendra Gubagundam.
+Mahendra Gubagundam
