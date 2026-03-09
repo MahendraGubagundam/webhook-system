@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webhook-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      - REDIS_HOST=redis
+    restart: always
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: webhook-worker
+    depends_on:
+      - redis
+      - api
+    environment:
+      - REDIS_HOST=redis
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: webhook-redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  postgres:
+    image: postgres:15
+    container_name: webhook-postgres
+    environment:
+      POSTGRES_USER: webhook
+      POSTGRES_PASSWORD: webhook
+      POSTGRES_DB: webhook_db
+    ports:
+      - "5432:5432"
+    restart: always
+
+  mock-receiver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mock-receiver
+    volumes:
+      - ./mock_receiver:/app/mock_receiver
+    command: uvicorn mock_receiver.server:app --host 0.0.0.0 --port 9000
+    ports:
+      - "9000:9000"
+    restart: always
