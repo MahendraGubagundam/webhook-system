@@ -205,23 +205,24 @@ Worker processes queue
 Mock receiver receives webhook payload
 
 Project Structure
-
+'''
 webhook-system
 │
 ├── api
-│ └── main.py
+│   └── main.py
 │
 ├── worker
-│ └── worker.py
+│   └── worker.py
 │
 ├── mock_receiver
-│ └── server.py
+│   └── server.py
 │
 ├── Dockerfile
 ├── Dockerfile.worker
 ├── docker-compose.yml
 ├── requirements.txt
 └── README.md
+'''
 Commit History
 
 The repository includes meaningful commits representing incremental development:
