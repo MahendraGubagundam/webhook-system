@@ -5,7 +5,6 @@ app = FastAPI()
 
 received_events = []
 
-
 @app.get("/")
 def health_check():
     return {
@@ -13,12 +12,9 @@ def health_check():
         "status": "running"
     }
 
-
 @app.post("/webhook")
 async def receive_webhook(request: Request):
-
     payload = await request.json()
-
     log_entry = {
         "timestamp": datetime.utcnow().isoformat(),
         "event": payload
