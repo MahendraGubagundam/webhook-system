@@ -8,6 +8,7 @@ This project was built as part of the **Atomicwork DevOps Intern Assignment**.
 
 # Architecture Overview
 
+"""
 The system architecture:
 
 
@@ -25,6 +26,7 @@ Delivery Worker
 v
 Webhook Endpoint (Mock Receiver)
 
+"""
 
 ### Components
 
@@ -204,7 +206,8 @@ Worker processes queue
 
 Mock receiver receives webhook payload
 
-Project Structure
+##Project Structure
+
 '''
 webhook-system
 │
@@ -223,6 +226,7 @@ webhook-system
 ├── requirements.txt
 └── README.md
 '''
+
 Commit History
 
 The repository includes meaningful commits representing incremental development:
