@@ -1,0 +1,116 @@
+Webhook Delivery System
+Overview
+
+This project implements a Webhook Delivery System that allows clients to register webhook endpoints and receive event notifications. The system ensures reliable delivery using a queue and background workers.
+
+The architecture separates the API service from the delivery workers to improve scalability and reliability.
+
+Architecture
+
+Client
+↓
+API Service (Webhook Management + Event Ingestion)
+↓
+Message Queue
+↓
+Delivery Workers
+↓
+External Webhook Endpoints
+
+Tech Stack
+
+Python – API and worker services
+
+FastAPI / Flask – REST API
+
+Redis / RabbitMQ – Message Queue
+
+PostgreSQL – Database
+
+Docker & Docker Compose – Containerization
+
+Project Structure
+webhook-system
+│
+├── api
+│   └── main.py
+│
+├── worker
+│   └── worker.py
+│
+├── mock_receiver
+│   └── server.py
+│
+├── Dockerfile
+├── Dockerfile.worker
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
+Setup Instructions
+1 Clone Repository
+git clone https://github.com/yourusername/webhook-system.git
+cd webhook-system
+2 Start the System
+docker-compose up --build
+
+This will start:
+
+API service
+
+Worker service
+
+Redis / RabbitMQ
+
+Mock receiver server
+
+API Endpoints
+Register Webhook
+POST /webhooks
+
+Example request body:
+
+{
+  "url": "http://mock_receiver:5000/webhook"
+}
+Send Event
+POST /events
+
+Example request:
+
+{
+  "event": "user_created",
+  "data": {
+    "user_id": 123
+  }
+}
+
+The event will be pushed to the queue and delivered asynchronously by the worker.
+
+Testing the Webhook
+
+A mock receiver server is included to simulate an external webhook endpoint.
+
+It will print received events in the logs.
+
+Running Services
+
+Check running containers:
+
+docker ps
+
+Stop services:
+
+docker-compose down
+Future Improvements
+
+Retry mechanism for failed deliveries
+
+Dead-letter queue
+
+Authentication for webhook endpoints
+
+Monitoring and logging
+
+Author
+
+Mahendra
